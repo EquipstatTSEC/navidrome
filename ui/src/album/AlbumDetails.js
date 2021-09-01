@@ -31,6 +31,7 @@ import {
   useAlbumsPerPage,
 } from '../common'
 import config from '../config'
+
 import { intersperse } from '../utils'
 import AlbumExternalLinks from './AlbumExternalLinks'
 
@@ -141,6 +142,17 @@ const AlbumComment = ({ record }) => {
       </Typography>
     </Collapse>
   )
+}
+
+const CommentLink = ({ record }) => {
+  const urlRegx =
+    /(https?:\/\/)?[\w\-~]+(\.[\w\-~]+)+(\/[\w\-~@:%]*)*(#[\w-]*)?(\?[^\s]*)?/gi
+  const result = record.comment.match(urlRegx)
+  const handleOpenLink = () => {
+    window.open(result[0], '_blank')
+  }
+
+  return <Link onClick={handleOpenLink}>{record.comment}</Link>
 }
 
 export const useGetHandleGenreClick = (width) => {
@@ -275,11 +287,11 @@ const AlbumDetails = (props) => {
                 <AlbumExternalLinks className={classes.externalLinks} />
               </Typography>
             )}
-            {isDesktop && record['comment'] && <AlbumComment record={record} />}
+            {isDesktop && record['comment'] && <CommentLink record={record} />}
           </CardContent>
         </div>
       </div>
-      {!isDesktop && record['comment'] && <AlbumComment record={record} />}
+      {!isDesktop && record['comment'] && <CommentLink record={record} />}
       {isLightboxOpen && (
         <Lightbox
           imagePadding={50}
